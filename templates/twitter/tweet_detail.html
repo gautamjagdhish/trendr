@@ -9,7 +9,7 @@
 	{% endif %}
 	<div class="media-body">
 		<div class="article-metadata">
-			<a class="mr-2" href="#">{{ tweet.author }}</a>
+			<a class="mr-2" href="{% url 'user_tweets' tweet.author.username %}">{{ tweet.author }}</a>
 			<small class="text-muted">Created on: {{ tweet.created|date:"F d, Y" }}</small>
 			<small class="text-muted">Updated on: {{ tweet.updated|date:"F d, Y" }}</small>
 		</div>

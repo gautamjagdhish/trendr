@@ -21,13 +21,9 @@ def create_profile(sender, instance, created, **kwargs):
 	if created:
 		Profile.objects.create(user=instance)
 
-
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
 	instance.profile.save()
-
-
-
 
 
 def twitter_list(request):
@@ -105,23 +101,6 @@ def user_logout(request):
 	messages.warning(request, "Your have been Logged Out.")
 	return redirect("twitter_list")
 
-# def register(request):
-# 	if request.method == 'POST':
-# 		form = UserRegistrationForm(request.POST or None)
-# 		if form.is_valid():
-# 			new_user = form.save(commit=False)
-# 			new_user.set_password(form.cleaned_data['password'])
-# 			new_user.save()
-# 			Profile.objects.create(user=new_user)
-# 			messages.success(request, "Your account has been created successfully. Now you can Log In.")
-# 			return redirect('twitter_list')
-# 	else:
-# 		form = UserRegistrationForm()
-# 	context = {
-# 		'form' : form,
-# 	}
-# 	return render(request, 'twitter/register.html', context)
-
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -133,25 +112,6 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'twitter/register.html', {'form': form})
-
-# @login_required
-# def edit_profile(request):
-# 	if request.method == "POST":
-# 		user_form = UserEditForm(data = request.POST or None, instance=request.user)
-# 		profile_form = ProfileEditForm(data = request.POST or None, instance=request.user.profile, files=request.FILES)
-# 		if user_form.is_valid() and profile_form.is_valid():
-# 			user_form.save()
-# 			profile_form.save()
-# 			messages.success(request, "Your Profile has been successfully Updated.")
-# 			return HttpResponseRedirect(reverse("edit_profile"))
-# 	else:
-# 		user_form = UserEditForm(instance=request.user)
-# 		profile_form = ProfileEditForm(instance=request.user.profile)
-# 	context = {
-# 		'user_form' : user_form,
-# 		'profile_form' : profile_form,
-# 	}
-# 	return render(request, 'twitter/edit_profile.html', context)
 
 @login_required
 def edit_profile(request):
@@ -209,15 +169,6 @@ def like_tweet(request):
 		is_likes = True
 	return HttpResponseRedirect(tweet.get_absolute_url())
 
-def user_liked_tweets(request):
-	user = request.user
-	liked_tweets = user.likes.all()
-	context = {
-		'liked_tweets' : liked_tweets
-	}
-	return render(request, 'twitter/user_liked_tweets.html', context)
-
-
 @login_required
 def tweet_delete(request, id):
 	tweet = get_object_or_404(Tweet, id=id)
@@ -227,11 +178,8 @@ def tweet_delete(request, id):
 	messages.warning(request, "Your Tweet has been successfully DELETED.")
 	return redirect('twitter_list')
 
-
-
 def about(request):
     return render(request, 'twitter/about.html')
-
 
 def trending(request):
 	limit = timezone.now() - timezone.timedelta(hours=12)
@@ -264,21 +212,35 @@ def trending(request):
 	}
 	return render(request, 'twitter/trending.html', context)
 
+def user_liked_tweets(request):
+	user = request.user
+	tweets = user.likes.all()
+	title='{}\'s Liked tweets'.format(user)
+	context = {
+		'title': title,
+		'pagetitle': title,
+		'tweets' : tweets
+	}
+	return render(request, 'twitter/twitter_list.html', context)
 
 def user_tweets(request, username):
 	user = get_object_or_404(User, username=username)
 	tweets = Tweet.objects.filter(author=user)
+	title='{}\'s tweets'.format(user)
 	context = {
 		'tweets' : tweets,
+		'pagetitle': title,
 		'username' : username
 	}
-	return render(request, 'twitter/user_tweets.html', context)
+	return render(request, 'twitter/twitter_list.html', context)
 
 
 def hashtag_tweets(request, hashtag):
 	tweets = Tweet.objects.filter(hashtag=hashtag)
+	title='tweets with #{}'.format(hashtag)
 	context = {
 		'tweets' : tweets,
+		'pagetitle': title,
 		'hashtag' : hashtag
 	}
-	return render(request, 'twitter/hashtag_tweets.html', context)
+	return render(request, 'twitter/twitter_list.html', context)

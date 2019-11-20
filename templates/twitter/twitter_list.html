@@ -1,5 +1,8 @@
 {% extends "twitter/base.html" %}
 {% block content %}
+
+<h2>{{ pagetitle }}</h2>
+
 {% for tweet in tweets %}
 <article class="media content-section">
 	{% if tweet.author.profile.photo %}
