@@ -1,0 +1,16 @@
+{% extends "twitter/base.html" %}
+{% load static %}
+
+{% block sidebar %}
+<div class="card">
+    <ul class="list-group">
+        <li class="list-group"><a href="{% url 'messages_inbox' %}" class="btn btn-light">Inbox</a></li>
+        <li class="list-group"><a href="{% url 'messages_outbox' %}" class="btn btn-light">Sent Messages</a></li>
+        <li class="list-group"><a href="{% url 'messages_compose' %}" class="btn btn-light"> New Message</a></li>
+        <li class="list-group"><a href="{% url 'messages_trash' %} " class="btn btn-light">Trash</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+{% endblock %}

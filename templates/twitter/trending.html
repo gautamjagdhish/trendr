@@ -1,0 +1,18 @@
+{% extends "twitter/base.html" %}
+{% block content %}
+<div class="col-md-8">
+  <div class="content-section">
+    <h3>Trending right now</h3>
+    <p class='text-muted'>
+      <ol class="list-group">
+      {% for key, value in hashtags.items %}
+        <li class="list-group-item list-group-item-light">
+          {{forloop.counter}}. <a href="{% url 'hashtag_tweets' key %}">{{key}} </a>
+          <p text-align=right>{{value}} tweets</p>
+        </li>
+      {% endfor %}
+      </ol>
+    </p>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends "twitter/base.html" %}
+{% block title %}{{ tweet.title }} | {{ block.super }}{% endblock %}
+{% block content %}
+<article class="media content-section">
+	{% if tweet.author.profile.photo %}
+	<img class="rounded-circle article-img" src="{{ tweet.author.profile.photo.url }}">
+	{% else %}
+	<img class="rounded-circle article-img" src="/media/default.jpg">
+	{% endif %}
+	<div class="media-body">
+		<div class="article-metadata">
+			<a class="mr-2" href="#">{{ tweet.author }}</a>
+			<small class="text-muted">Created on: {{ tweet.created|date:"F d, Y" }}</small>
+			<small class="text-muted">Updated on: {{ tweet.updated|date:"F d, Y" }}</small>
+		</div>
+		<h2 class="article-title">{{ tweet.title }}</h2>
+		<p class="article-content">{{ tweet.content }}</p>
+		<a class="article-content" href="{% url 'hashtag_tweets' tweet.hashtag %}"><b>#{{ tweet.hashtag }}</b></a>
+
+		<form action="{% url 'like_tweet' %}" method="POST">
+			{% csrf_token %}
+			<p>
+				{% if is_liked %}
+				<button type="submit" name='tweet_id' value="{{tweet.id}}" class="btn btn-secondary">
+					Unlike
+				</button>
+				{% else %}
+				<button type="submit" name='tweet_id' value="{{tweet.id}}" class="btn btn-primary">
+					Like
+				</button>
+				{%endif%}
+				{{total_likes}} Like{{total_likes|pluralize}}
+			</p>
+		</form>
+
+		{% if tweet.author == request.user %}
+		<div>
+			<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'tweet_edit' id=tweet.id %}">Edit</a>
+			<a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'tweet_delete' id=tweet.id %}"
+				id='delete'>Delete</a>
+		</div>
+		{% endif %}
+	</div>
+</article>
+
+{% endblock content %}

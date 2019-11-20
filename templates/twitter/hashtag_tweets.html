@@ -1,0 +1,24 @@
+{% extends "twitter/base.html" %}
+{% block content %}
+<h1 class="mb-3">Tweets with {{ hashtag }}</h1>
+{% for tweet in tweets %}
+<article class="media content-section">
+	{% if tweet.author.profile.photo %}
+	<img class="rounded-circle article-img" src="{{ tweet.author.profile.photo.url }}">
+	{% else %}
+	<img class="rounded-circle article-img" src="/media/default.jpg">
+	{% endif %}
+	<div class="media-body">
+		<div class="article-metadata">
+
+			<a class="mr-2" href="{% url 'user_tweets' tweet.author.username %}">{{ tweet.author }}</a>
+			<small class="text-muted">created on: {{ tweet.created|date:"F d, Y" }}</small>
+			<small class="text-muted">updated on: {{ tweet.updated|date:"F d, Y" }}</small>
+		</div>
+		<h2><a class="article-title" href="{{ tweet.get_absolute_url }}">{{ tweet.title }}</a></h2>
+		<p class="article-content">{{ tweet.content }}</p>
+		<a class="article-content" href="{% url 'hashtag_tweets' tweet.hashtag %}"><b>#{{ tweet.hashtag }}</b></a>
+	</div>
+</article>
+{% endfor %}
+{% endblock content %}

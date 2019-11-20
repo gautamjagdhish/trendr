@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+    <div class="container-fluid px-5">
+        <a class="navbar-brand mx-4" href="{% url 'twitter_list' %}">Twitter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+            aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link" href="{% url 'twitter_list' %}">Home</a>
+                <a class="nav-item nav-link" href="{% url 'about' %}">About</a>
+                <a class="nav-item nav-link" href="{% url 'trending' %}">Trending</a>
+                {% if user.is_authenticated %}
+                <a class="nav-item nav-link" href="{% url 'messages_inbox' %}">Messages</a>
+                {% endif %}
+            </div>
+            <div class="navbar-nav">
+                <form class="form-inline my-2 my-lg-0 px-3" action="{% url 'twitter_list' %}">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                    <button class="btn btn-dark my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                {% if request.user.profile.photo %}
+                <img src="{{ request.user.profile.photo.url }}" height="35px" width="35px">
+                {% else %}
+                <img src="/media/default.jpg" height="35px" width="35px">
+                {% endif %}
+                <a class="nav-item nav-link" href="{% url 'edit_profile' %}">Edit Profile</a>
+                <a class="nav-item nav-link" href="{% url 'tweet_create' %}">New Tweet</a>
+                <a class="nav-item nav-link" href="{% url 'user_liked_tweets' %}">Liked Tweets</a>
+                <a class="nav-item nav-link" href="{% url 'user_logout' %}">Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" href="{% url 'user_login' %}">Login</a>
+                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

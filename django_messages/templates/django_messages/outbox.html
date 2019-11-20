@@ -1,0 +1,35 @@
+{% extends "django_messages/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2 class="px-4">Sent Messages</h2>
+{% if message_list %}
+<div class="container">
+<table class="table-light">
+    <thead>
+        <tr class="d-flex py-3">
+            <th class="col-sm-4">{% trans "Sender" %}</th>
+            <th class="col-sm-4">{% trans "Subject" %}</th>
+            <th class="col-sm-6">{% trans "Received" %}</th>
+            <th class="col-sm-3">{% trans "Action" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in message_list %}
+        <tr class="d-flex py-3">
+            <td class="col-sm-4">{{ message.recipient }}</td>
+            <td class="col-sm-4">
+                <a href="{{ message.get_absolute_url }}">{{ message.subject }}</a>
+            </td>
+            <td class="col-sm-6">{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
+            <td class="col-sm-3"><a
+                    href="{% url 'messages_delete' message.id %}?next={% url 'messages_outbox' %}">{% trans "delete" %}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>{% trans "No messages." %}</p>
+{% endif %}
+{% endblock %}
